@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
+import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -19,7 +20,7 @@ import { AuthModule } from './auth/auth.module';
       JWT_EXPIRATION_TIME: Joi.string().required(),
     })
   }),UserModule,DatabaseModule,AuthModule],
-  controllers: [UserController],
+  controllers: [],
   providers: [],
 })
 export class AppModule {}

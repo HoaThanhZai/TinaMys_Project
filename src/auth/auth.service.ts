@@ -1,9 +1,10 @@
 import { UserService } from "src/user/user.service";
 import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus } from "@nestjs/common";
-import CreateUserDto from "src/dto/create-user.dto";
+import {CreateUserDto} from "src/dto/create-user.dto";
 import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
+import { User } from "src/entity/user.entity";
 
 
 export class AuthService {
@@ -13,7 +14,7 @@ export class AuthService {
     private readonly configService: ConfigService
     ) {}
    
-    public async register(registrationData: CreateUserDto) {
+    public async register(registrationData: CreateUserDto):Promise<User |null> {
       const hashedPassword = await bcrypt.hash(registrationData.password, 10);
       try {
         const createdUser = await this.userService.create({
