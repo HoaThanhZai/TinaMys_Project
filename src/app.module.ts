@@ -1,11 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
-import { AuthController } from './auth/auth.controller';
 
 @Module({
   imports: [ConfigModule.forRoot({

@@ -24,7 +24,7 @@ export class UserService {
         throw new HttpException('Ko ton tai email!!',HttpStatus.NOT_FOUND);
     }
 
-    async create(userData:CreateUserDto){
+    async createUser(userData:CreateUserDto){
         const newUser = await this.userRepository.create(userData);
         await this.userRepository.save(newUser);
         return newUser;

@@ -14,22 +14,23 @@ export class AuthService {
     private readonly configService: ConfigService
     ) {}
    
-    public async register(registrationData: CreateUserDto):Promise<User |null> {
+     async register(registrationData: CreateUserDto):Promise<User |null> {
       const hashedPassword = await bcrypt.hash(registrationData.password, 10);
       try {
-        const createdUser = await this.userService.create({
+        const createdUser = await this.userService.createUser({
           ...registrationData,
           password: hashedPassword
         });
         createdUser.password = undefined;
         return createdUser;
       } catch (error) {
+        console.log(error);
         throw new HttpException('Something went wrong', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     }
 
 
-    public async getAuthenticatedUser(email: string, hashedPassword: string) {
+     async getAuthenticatedUser(email: string, hashedPassword: string) {
         try {
           const user = await this.userService.getByEmail(email);
           const isPasswordMatching = await bcrypt.compare(
@@ -42,6 +43,7 @@ export class AuthService {
           user.password = undefined;
           return user;
         } catch (error) {
+          console.log(error);
           throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
         }
       }
