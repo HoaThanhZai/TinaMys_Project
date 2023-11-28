@@ -1,17 +1,17 @@
 import { UserService } from "src/user/user.service";
 import * as bcrypt from 'bcrypt';
-import { HttpException, HttpStatus } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import {CreateUserDto} from "src/dto/create-user.dto";
-import { JwtService } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
 import { User } from "src/entity/user.entity";
+import { LoginDto } from "src/dto/login-user.dto";
+import { JwtService } from "@nestjs/jwt";
 
-
+@Injectable()
 export class AuthService {
     constructor(
       private readonly userService: UserService,
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService
     ) {}
    
      async register(registrationData: CreateUserDto):Promise<User |null> {
@@ -46,5 +46,16 @@ export class AuthService {
           console.log(error);
           throw new HttpException('Wrong credentials provided', HttpStatus.BAD_REQUEST);
         }
+      }
+
+      async login(user: any) {
+        const payload = {email:user.email,sub:user.id};
+        const accessTokenPayload = { payload};
+        const refreshTokenPayload = { sub: payload.sub };
+        
+        return {
+          accessToken: this.jwtService.sign(accessTokenPayload),
+          refreshToken: this.jwtService.sign(refreshTokenPayload)
+        };
       }
   }

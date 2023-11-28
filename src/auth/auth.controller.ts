@@ -1,8 +1,9 @@
-import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Request, UseGuards } from '@nestjs/common';
 import {CreateUserDto} from 'src/dto/create-user.dto';
 import { AuthService } from './auth.service';
 import{LocalAuthGuard} from './local.guard'
-import RequestWithUser from '../interface/requestWithUser.interface';
+import JwtAuthenticationGuard from './jwt-auth.guard';
+
 
 
 @Controller('auth')
@@ -16,13 +17,17 @@ export class AuthController{
         return this.authenticationService.register(registrationData);
       }
      
-      @HttpCode(200)
+
       @UseGuards(LocalAuthGuard)
       @Post('log-in')
-      async logIn(@Req() request: RequestWithUser) {
-        const user = request.user;
-        user.password = undefined;
-        return user;
+      async logIn(@Request() request) {
+        return await this.authenticationService.login(request.user);
+      }
+
+      @UseGuards(JwtAuthenticationGuard)
+      @Get('reLogIn')
+      reLogIn(@Request() request):string{
+        return request.user;
       }
 
 }

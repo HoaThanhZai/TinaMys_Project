@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { asyncScheduler } from 'rxjs';
 import { CreateUserDto} from 'src/dto/create-user.dto';
 import { User } from 'src/entity/user.entity';
 import { Repository } from 'typeorm';
@@ -14,7 +15,7 @@ export class UserService {
     async findAll() : Promise<User[]>{
         return await this.userRepository.find();
     }
-
+  
     async getByEmail(email:string){
         const user = await this.userRepository.findOneBy({email});
 
