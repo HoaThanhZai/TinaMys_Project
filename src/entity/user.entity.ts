@@ -11,6 +11,9 @@ export class User{
     public email:string
 
     @Column()
+    public roles : string;
+
+    @Column()
     public password:string;
     
 }

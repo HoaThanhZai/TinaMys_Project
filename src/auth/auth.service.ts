@@ -2,9 +2,7 @@ import { UserService } from "src/user/user.service";
 import * as bcrypt from 'bcrypt';
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import {CreateUserDto} from "src/dto/create-user.dto";
-import { ConfigService } from "@nestjs/config";
 import { User } from "src/entity/user.entity";
-import { LoginDto } from "src/dto/login-user.dto";
 import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
@@ -19,7 +17,8 @@ export class AuthService {
       try {
         const createdUser = await this.userService.createUser({
           ...registrationData,
-          password: hashedPassword
+          roles : 'user',
+          password: hashedPassword,
         });
         createdUser.password = undefined;
         return createdUser;
@@ -49,7 +48,7 @@ export class AuthService {
       }
 
       async login(user: any) {
-        const payload = {email:user.email,sub:user.id};
+        const payload = {email:user.email,sub:user.id,roles: user.roles};
         const accessTokenPayload = { payload};
         const refreshTokenPayload = { sub: payload.sub };
         

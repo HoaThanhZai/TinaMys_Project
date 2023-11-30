@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { DatabaseModule } from './database/database.module';
 import { AuthModule } from './auth/auth.module';
+import { RolesGuard } from './user/roles.guard';
+import { APP_GUARD } from '@nestjs/core/constants';
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -19,6 +21,13 @@ import { AuthModule } from './auth/auth.module';
     })
   }),UserModule,DatabaseModule,AuthModule],
   controllers: [],
-  providers: [],
+  providers: [{
+    provide: APP_GUARD,
+    useClass: RolesGuard,
+    }
+  ],
 })
 export class AppModule {}
+
+
+
